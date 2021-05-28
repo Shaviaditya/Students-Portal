@@ -1,0 +1,46 @@
+<html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>Document121</title>
+     <style>
+         .lobtn{
+             margin-left: 97%;
+         }
+     </style>
+ </head>
+ <body>
+    <a href="/logout"><button class="lobtn">Logout</button></a>
+     <br><br><br><br>
+     <h1>File Download System</h1>
+    <% if(data.length > 0) {%>
+      <table>
+           <thead>
+               <tr>
+                   <td>
+                       Files
+                   </td>
+                   <td>
+                       download
+                   </td>
+               </tr>
+           </thead>
+           <tbody>
+               <% for(var i=0; i< data.length; i++) {%>
+               <tr>
+                   <td>
+                 <img src="<%= data[i].filepath%>" alt="<%= data[i].filepath%>">
+                   </td>
+                   <td>
+                <form action="/download/<%= data[i]._id%>">
+                 <input type="submit" value="download">
+                </form>
+                   </td>
+               </tr>
+               <% } %>
+           </tbody>
+      </table>
+      <% } %>  
+ </body>
+ </html>

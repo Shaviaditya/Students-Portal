@@ -1,0 +1,39 @@
+<% if(data.length > 0) {%>
+      <table>
+           <thead>
+               <tr>
+                   <td>
+                       Files
+                   </td>
+                   <td>
+                       Downloads
+                   </td>
+               </tr>
+           </thead>
+           <tbody>
+               <% for(var i=0; i< data.length; i++) {%>
+               <tr>
+                   <% for(var j=i+1;j<data.length; j++) {%>
+                    <% if(data[i].subjectcode==data[j].subjectcode && i!=0) {%>
+                        <td>
+                            <h4><%= (data[i].filepath).slice(9,(data[i].filepath).length)%></h4>
+                        </td>
+                        <% break %>
+                    <% } else { %>
+                        <h4><%=data[i].subjectcode%> </h4>
+                        <td>
+                            <h4><%= (data[i].filepath).slice(9,(data[i].filepath).length)%></h4>
+                        </td>
+                        <% break %> 
+                    <% } %>
+                    <% } %> 
+                   <td> 
+                    <form action="/download/<%= data[i]._id%>">
+                        <input type="submit" value="download">
+                    </form>
+                   </td>
+               </tr>
+               <% } %>
+           </tbody>
+      </table>
+      <% } %>

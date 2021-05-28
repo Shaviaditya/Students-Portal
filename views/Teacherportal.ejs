@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: darkseagreen;
+        }
+        nav{
+            color: aliceblue;
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: row;
+            background-color: rgb(66, 66, 66);
+            padding-bottom: -25px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        #username{
+            color: aliceblue;
+            margin-right: 50px;
+        }
+        .lobtn{
+            color: aliceblue;
+            font-size: large;
+            background-color: rgb(66, 66, 66);
+            border: none;
+            margin-bottom: 10px;
+            margin-right: 12px;
+        }
+        #lbtn{
+            font-size: smaller;
+            font-size: medium;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            text-decoration: none;
+            color: aliceblue;
+        }
+        h1{
+            margin-right: 75%;
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 7%;
+            background-color: rgba(229, 226, 226, 0.548);
+            margin-left: 26%;
+            margin-right: 24%;
+            padding: 30px 0 30px 0;
+            border-radius: 20px;
+        }
+        ul{
+            list-style: none;
+            
+        }
+        li{
+            font-size: larger;
+            background-color: black;
+            margin: 0 0 25px 0;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        #link{
+            color: aliceblue;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1>Basic Portal</h1>
+        <h3 id="username">Welcome,<%=user.username %></h3>
+        <button class="lobtn"><a href="/logout" id="lbtn">Logout</a></button>
+    </nav>
+    <div class="container">
+        <h2>Welcome, Nice to Meet You</h2>
+        <ul>
+            <li><a href="/route1" id="link">Upload Notes</a></li>
+            <li><a href="/questions/create" id="link">Click to create customized Questions</a></li>
+<<<<<<< HEAD
+            <li><a href="/response" id="link">Click to check results</a></li>
+            <li><a href="/subject/create" id="link">Click to add new subjects</a></li>
+            <li><a href="/subjects1" id="link">Check Uploads of Various Subjects</a></li>
+=======
+            <li><a href="/response" id="link">Click to check results</a></li> 
+>>>>>>> 22b2177b6c5683ba1957dd7ef02c0725b6edd1ea
+        </ul>
+    </div>
+</body>
+</html>

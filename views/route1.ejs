@@ -1,0 +1,85 @@
+<html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>Document</title>
+ </head>
+ <style>
+      body{
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: darkseagreen;
+        }
+     nav{
+            color: aliceblue;
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: row;
+            background-color: rgb(66, 66, 66);
+            padding-bottom: -25px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        #username{
+            color: aliceblue;
+            margin-right: 50px;
+        }
+        .lobtn{
+            color: aliceblue;
+            font-size: large;
+            background-color: rgb(66, 66, 66);
+            border: none;
+            margin-bottom: 10px;
+            margin-right: 12px;
+        }
+        #lbtn{
+            font-size: smaller;
+            font-size: medium;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            text-decoration: none;
+            color: aliceblue;
+        }
+        #head{
+            margin-right: 75%;
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 12%;
+            background-color: rgba(229, 226, 226, 0.548);
+            margin-left: 26%;
+            margin-right: 24%;
+            padding: 30px 0 30px 0;
+            border-radius: 20px;
+        }
+        table{
+            border-spacing: 57px 0;
+        }
+ </style>
+ <body>
+        <nav>
+            <h1 id="head">Basic Portal</h1>
+            <h3 id="username">Welcome,<%=user.username %></h3>
+            <button class="lobtn"><a href="/logout" id="lbtn">Logout</a></button>
+        </nav>
+        <div class="container">
+            <h1>File Upload System</h1>
+            <form action="/route1" method="POST" enctype="multipart/form-data">
+                <input type="text" name="subjectcode" placeholder="Subjectcode" required><br>
+                <br>
+                <input type="number" name="year" id="year" placeholder="Year of Study" required><br>
+                <br>
+                <input type="file" name="file" id="file"><br>
+                <br>
+                <input id="btn" type="submit" value="upload file">
+            </form><br>
+        </div> 
+        <script>
+            document.getElementById('btn').addEventListener('click',function(){
+                alert("File Uploaded Successfully");
+            })
+        </script> 
+ </body>
+ </html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: darkseagreen;
+        }
+    nav{
+            color: aliceblue;
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: row;
+            background-color: rgb(66, 66, 66);
+            padding-bottom: -25px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        #username{
+            color: aliceblue;
+            margin-right: 50px;
+        }
+        .lobtn{
+            color: aliceblue;
+            font-size: large;
+            background-color: rgb(66, 66, 66);
+            border: none;
+            margin-bottom: 10px;
+            margin-right: 12px;
+        }
+        #lbtn{
+            font-size: smaller;
+            font-size: medium;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            text-decoration: none;
+            color: aliceblue;
+        }
+        #head{
+            margin-right: 75%;
+        }
+    .creative{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 170px;
+        margin-left: 450px;
+        margin-right: 450px;
+        flex-direction: column;
+        background-color: rgba(228, 225, 225, 0.705);
+        padding: 20px 0 20px 0;
+        border-radius: 20px;
+    }
+    ul{
+        list-style: none;
+    }
+    li{
+        margin: 0 0 10px 0;
+    }
+    #description{
+        font-size: 20px;
+        padding: 10px 30px 10px 30px;
+    }
+    #option1{
+        font-size: 20px;
+        padding: 10px 30px 10px 30px;
+    }
+    #option2{
+        font-size: 20px;
+        padding: 10px 30px 10px 30px;
+    }
+    #option3{
+        font-size: 20px;
+        padding: 10px 30px 10px 30px;
+    }
+    #option4{
+        font-size: 20px;
+        padding: 10px 30px 10px 30px;
+    }
+    #answer{
+        font-size: 20px;
+        padding: 10px 30px 10px 30px;
+    }
+    #btn1{
+        padding: 10px;
+        border: none;
+        border-radius: 2px;
+        background-color: black;
+        color: aquamarine;
+        font-size: 20px;
+    }
+    #label{
+        font-size: 20px;
+        background-color: black;
+        color: darkcyan;
+        padding: 10px 20px 10px 20px;
+    }
+</style>
+<body>
+    <nav>
+        <h1 id="head">Basic Portal</h1>
+        <h3 id="username">Welcome,<%=user.username %></h3>
+        <button class="lobtn"><a href="/logout" id="lbtn">Logout</a></button>
+    </nav>
+    <div class="creative">
+        <h1>Set your questions for the exam & set timings after that!</h1>
+        <form action="/questions" method="POST">
+            <label for="description" id="label">Question</label>
+            <input type="text" id="description" name="description" placeholder="Question" required>
+            <br>
+            <ul>
+                <li>
+                    <label for="option1" id="label">Option 1</label>
+                    <input type="text" id="option1" name="option1" placeholder="Option1" required>
+                </li>
+                <li>
+                    <label for="option2" id="label">Option 2</label>
+                    <input type="text" id="option2" name="option2" placeholder="Option2" required>
+                </li>
+                <li>
+                    <label for="option3" id="label">Option 3</label>
+                    <input type="text" id="option3" name="option3" placeholder="Option3" required>
+                </li>
+                <li>
+                    <label for="option4" id="label">Option 4</label>
+                    <input type="text" id="option4" name="option4" placeholder="Option4" required>
+                </li>
+            </ul>
+            <label for="answer" id="label">Answer</label>
+            <input type="text" id="answer" name="answer" placeholder="Answer" required>
+            <button id="btn1">Submit</button>
+        </form>
+        <br>
+        <a href="/settime"><button id="btn1">Set the timings</button></a>
+    </div>
+</body>
+</html>
