@@ -1,4 +1,4 @@
-# ExamPortalV1
+# Exam-Notes_Portal
 This is a basic Exam Portal made primamrily using nodeJS , mongoDB database, express framework and embedded Javascript, it has 2 ports one for teacher and other for the student where teacher can upload notes and schedule exams as well as make her own questions whereas student on 2nd port can download them as well as given exam within the stipulated time. All routes are protected with JWT cookies so as to full privacy to each route for itself. 
 ## Requirements
 node.js
@@ -16,6 +16,10 @@ After downloading the Repo, and having everything of the **Requirements** follow
 ```sh
 npm install
 ```
-  You will see that, now there is a folder called node_modules,which contains all the dependancies this project requires.
-# ExamPortalV1
-# Exam-Notes_Portal
+
+You will see that, now there is a folder called node_modules,which contains all the dependancies this project requires.
+-After this to start with the portal you have ti type a simple command i.e
+```sh
+npm run dev
+```
+This shall deploy the local host and you shall see your portal running!
