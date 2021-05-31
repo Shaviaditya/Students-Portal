@@ -1,0 +1,16 @@
+version: '3'
+services: 
+    server:
+        container_name: node-docker
+        restart: always
+        build: .
+        command: npm start
+        ports: 
+            - 80:5000
+        links: 
+            - 'mongo'
+    mongo:
+        container_name: Mongoose55
+        image: mongo
+        ports: 
+            - 27017:27017
