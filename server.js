@@ -18,7 +18,7 @@ app.use(cookieParser())
 //View engine
 app.set('view engine','ejs')
 //Connecting to the database
-const URL = 'mongodb://mongo:27017/myFirstDatabase';
+const URL = 'mongodb+srv://Mongoose55:Wifi5757@cluster0.ydfmd.mongodb.net/myFirstDatabase';
 mongoose.connect(URL,{useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
 .then(()=>{
     app.listen(5000)
