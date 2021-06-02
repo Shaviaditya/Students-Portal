@@ -13,7 +13,7 @@ routerf.use(express.urlencoded({extended:true}))
 //Setting up storage
 const fileStorageEngine = multer.diskStorage({
     destination:(req,file,cb)=>{
-        cb(null,'./uploads')
+        cb(null,'./routes/uploads')
     },
     filename:(req,file,cb)=>{
         cb(null,file.originalname)
@@ -66,7 +66,7 @@ routerf.get('/download/:num/:id',(req,res)=>{
              console.log(err)
          }
          else{
-             const name = (__dirname.slice(0,(((__dirname).length)-7)));
+             const name = __dirname;
              var x= name+data[0].filepath[req.params.num];
              console.log(x);
              res.download(x)

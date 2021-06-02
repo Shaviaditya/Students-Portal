@@ -271,6 +271,7 @@ routerx.get('/subjects',reqauthst,checkuser2,async (req,res)=>{
 })
 routerx.post('/subject/data',reqauthst,checkuser2,async (req,res)=>{
     var x = req.body.response
+    console.log(x);
     var temp = new Response({
         response:x
     })
@@ -292,16 +293,18 @@ routerx.get('/subject/data',checkuser2,reqauthst,async (req,res)=>{
     const requester = await Response.findOne()
     if(requester!=null){
         const id2 = requester._id;
+        console.log(id2);
         fileModel.find({year:key.year,subjectcode:requester.response},async (err,data)=>{
-            await Response.findByIdAndDelete(id2);
             console.log(data)
             if(err){
                 console.log(err)
             }
             else if(data.length>0){
+                await Response.findByIdAndDelete(id2);
                 res.render('route2',{data:data})
             }
             else{
+                await Response.findByIdAndDelete(id2);
                 res.render('route2',{data:{}})
             }
         })
@@ -341,15 +344,16 @@ routerx.get('/subject1/data',checkuser,reqauth,async(req,res)=>{
     const id2 = requester2._id;
     if(requester2!=null){
         fileModel.find({subjectcode:requester2.response},async (err,data)=>{
-            await Response.findByIdAndDelete(id2);
             console.log(data)
             if(err){
                 console.log(err)
             }
             else if(data.length>0){
+                await Response.findByIdAndDelete(id2);
                 res.render('route3',{data:data})
             }
             else{
+                await Response.findByIdAndDelete(id2);
                 res.render('route3',{data:{}})
             }
         })

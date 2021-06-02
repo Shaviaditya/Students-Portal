@@ -21,8 +21,8 @@ app.set('view engine','ejs')
 const URL = 'mongodb+srv://Mongoose55:Wifi5757@cluster0.ydfmd.mongodb.net/myFirstDatabase';
 mongoose.connect(URL,{useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
 .then(()=>{
-    app.listen(5700)
-    console.log(`Database Up and running at http://localhost:5700/`)
+    app.listen(5000)
+    console.log(`Database Up and running at http://localhost:5000/`)
 })
 .catch((err)=>{
     console.log(err)
