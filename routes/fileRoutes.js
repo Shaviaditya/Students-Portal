@@ -66,17 +66,17 @@ routerf.get('/download/:num/:id',(req,res)=>{
              console.log(err)
          }
          else{
-             const name = (__dirname.slice(0,45));
+             const name = (__dirname.slice(0,(((__dirname).length)-7)));
              var x= name+data[0].filepath[req.params.num];
              console.log(x);
              res.download(x)
          }
     })
 })
+/*
 routerf.get('/subject/data',checkuser2,reqauthst,(req,res)=>{
     res.send('Hello')
 })
-/*
 routerf.get('/router2',checkuser2,reqauthst,async (req,res)=>{
     var d;
     const token = req.cookies.LoggedStudent;
