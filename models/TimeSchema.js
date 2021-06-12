@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const TimeSchema = new mongoose.Schema({
-    starttime: {
+    startslot: {
         type: Date,
         unique: true,
     },
-    endtime: {
+    endslot: {
         type: Date,
         unique: true,
     }

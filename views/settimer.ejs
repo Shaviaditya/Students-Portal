@@ -72,9 +72,11 @@
         <form action="/settime" method="post">
 
             <label for="Starting">Start Time: </label>
+            <input type="date" name="startdate" required>
             <input type="text" name="starttime" required>
             <br><br>
             <label for="End">End Time : </label>
+            <input type="date" name="enddate" required>
             <input type="text" name="endtime" required>
             <br>
             <button type="submit" id="btn">Submit</button>

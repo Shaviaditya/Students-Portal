@@ -49,9 +49,9 @@ routerx.post('/stuview',reqauthst,async (req, res) => {
     var isodate = new Date().toISOString()
 
     var time1 = new Date(isodate).toLocaleTimeString('en',{timestyle:'short',hour12:false,timeZone:'Asia/Kolkata'});
-    var start = timer.starttime
+    var start = timer.startslot
     var time2 = new Date(start).toLocaleTimeString('en',{timestyle:'short',hour12:false,timeZone:'UTC'});
-    var end = timer.endtime
+    var end = timer.endslot
     var time3 = new Date(end).toLocaleTimeString('en',{timestyle:'short',hour12:false,timeZone:'UTC'});
     if(time1>=time2 && time1<=time3)
     {
@@ -158,19 +158,24 @@ routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
     }
     else{
         console.log(timer)
+        console.log(timer.startslot)
+        console.log(timer.endslot)
         var isodate = new Date().toISOString()
         var date1 = new Date();
         var newdate1 = new Date(date1.getTime()-(date1.getTimezoneOffset()*60000)).toISOString();
         var time1 = new Date(isodate).toLocaleTimeString('en',{timestyle:'short',hour12:false,timeZone:'Asia/Kolkata'});
-        var start = timer.starttime
+        var start = timer.startslot
         var time2 = new Date(start).toLocaleTimeString('en',{timestyle:'short',hour12:false,timeZone:'UTC'});
-        var end = timer.endtime
+        var end = timer.endslot
         var time3 = new Date(end).toLocaleTimeString('en',{timestyle:'short',hour12:false,timeZone:'UTC'});
         var ttime = (end - start)/1000;
         console.log(start)
         console.log(end)
         var newdate2 = new Date(newdate1)
         console.log(newdate2)
+        console.log(time1)
+        console.log(time2)
+        console.log(time3)
         if(time1>=time2 && time1<=time3)
         {
             ttime = (end-newdate2)/1000;
@@ -192,9 +197,9 @@ routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
     }
 });
 const handlerror = (err)=>{
-    let error = {starttime:'',endtime:''}
+    let error = {startslot:'',endslot:''}
     if(err.code===11000){
-        error.starttime = 'This timeslot is already in use';
+        error.startslot = 'This timeslot is already in use';
         return error;
     }
     return error;
@@ -204,17 +209,21 @@ routerx.get('/settime',reqauth,checkuser,(req,res)=>{
 })
 routerx.post('/settime',reqauth,async (req,res)=>{
     try{
-        const {starttime,endtime} = req.body
-        console.log(req.body)
+        const starttime = req.body.starttime
+        const endtime = req.body.endtime
+        const startday = req.body.startdate
+        const endday = req.body.enddate
+        const startslot = (startday.toString())+"T"+starttime+"Z"
+        const endslot = (endday.toString())+"T"+endtime+"Z"
         const schedule = await Timer.create({
-            starttime,
-            endtime
+            startslot,
+            endslot
         })
         res.redirect('/Teacherportal')
     }
     catch(err){
         const errors = handlerror(err)
-        return res.send(errors.starttime);
+        return res.send(errors.startslot);
     }
 })
 routerx.get('/response',async(req,res)=>{
