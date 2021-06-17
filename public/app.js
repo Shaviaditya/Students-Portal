@@ -13,7 +13,7 @@ function update(){
     if(hours==0 && minutes==0 &&seconds==0)
     {
         alert('Exam over')
-        location.replace('http://localhost:5000/Studentportal')
+        location.replace('/Studentportal')
     }
     count.innerHTML = `${hours}:${minutes}:${seconds}`;
     totaltime--

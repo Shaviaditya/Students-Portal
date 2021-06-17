@@ -36,7 +36,6 @@
         li{
             list-style: none;
             padding: 2px;
-
             font-size: larger;
             background-color: black;
             color: aliceblue;
@@ -93,7 +92,7 @@
     <div class="container">
         <h2>Subjects of the curricullum</h2>
         <% if(data.length > 0) { %>
-            <form action="/subject1/data" method="POST">
+            <form action="/resultcheck/data" method="POST">
                 <% for(var i=0;i<data.length;i++) {%>
                     <div class="bt">
                         <li><button id="btn" type="submit" name="response" value="<%=data[i].subject%>"><%=data[i].name%> (<%=data[i].subject%>)</button></li>

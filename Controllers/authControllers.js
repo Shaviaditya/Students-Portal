@@ -36,7 +36,7 @@ const createtokens = (id)=>{
     })
 }
 module.exports.signup_get = (req,res)=>{
-    res.render('signup');
+    res.render('Signup');
 }
 module.exports.signup_post = async (req,res)=>{
     const {username, password, stream , year} = req.body;
@@ -52,12 +52,12 @@ module.exports.signup_post = async (req,res)=>{
     }
 }
 module.exports.login_get = (req,res)=>{
-    res.render('login');
+    res.render('LoginPage');
 }
 module.exports.login_post = async (req,res)=>{
-    const {username,password, stream , year} = req.body
+    const {username,password} = req.body
     try {
-        const user = await User.login(username,password, stream , year)
+        const user = await User.login(username,password)
         const token = createtokens(user._id)
         if(username==='teacher'){
             res.cookie('LoggedTeacher',token,{httpOnly: true})

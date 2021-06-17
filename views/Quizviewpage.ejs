@@ -120,12 +120,12 @@
             <% if(blogs.length > 0){ %>
                 <% blogs.forEach(blog=>{%> 
                     <div class="container">
-                        <h2 class="description">Q<%=val+1%>):  <%=blog.description%></h3>
+                        <h2 class="description">Q<%=val+1%>):  <%=(blog[0])%></h3>
                         <ol>
-                            <li><h3 class="option1"><input type="radio" id="answers" name="answer[<%=val%>]" value="1" ><%=blog.option1%></h3></li>
-                            <li><h3 class="option2"><input type="radio" id="answers" name="answer[<%=val%>]" value="2" ><%=blog.option2%></h3></li>
-                            <li><h3 class="option3"><input type="radio" id="answers" name="answer[<%=val%>]" value="3" ><%=blog.option3%></h3></li>
-                            <li><h3 class="option4"><input type="radio" id="answers" name="answer[<%=val%>]" value="4" ><%=blog.option4%></h3></li>
+                            <li><h3 class="option1"><input type="radio" id="answers" name="answer[<%=val%>]" value="1" ><%=blog[1]%></h3></li>
+                            <li><h3 class="option2"><input type="radio" id="answers" name="answer[<%=val%>]" value="2" ><%=blog[2]%></h3></li>
+                            <li><h3 class="option3"><input type="radio" id="answers" name="answer[<%=val%>]" value="3" ><%=blog[3]%></h3></li>
+                            <li><h3 class="option4"><input type="radio" id="answers" name="answer[<%=val%>]" value="4" ><%=blog[4]%></h3></li>
                         </ol>
                     </div>
                     <%val+=1%>

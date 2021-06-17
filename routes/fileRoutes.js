@@ -7,13 +7,13 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const jwt = require('jsonwebtoken')
 const User = require('../models/users');
-const Response = require('../models/userreq')
+const Response = require('../models/userreq');
 routerf.use(express.json())
 routerf.use(express.urlencoded({extended:true}))
 //Setting up storage
 const fileStorageEngine = multer.diskStorage({
     destination:(req,file,cb)=>{
-        cb(null,'./routes/uploads')
+        cb(null,'./public/uploads')
     },
     filename:(req,file,cb)=>{
         cb(null,file.originalname)
@@ -27,37 +27,41 @@ routerf.get('/route1',reqauth,checkuser,(req,res)=>{
             console.log(err)
         }
         else if(data.length>0){
-            res.render('route1',{data:data})
+            res.render('FileUploadRoute',{data:data})
         }
         else{
-            res.render('route1',{data:{}})
+            res.render('FileUploadRoute',{data:{}})
         }
     })
 })
 routerf.post('/route1',reqauth,upload.single("file"),async (req,res)=>{
-    var x = '/uploads/'+req.file.originalname;
-    var y = req.body.subjectcode;
-    var z = req.body.year;
-    var check1 = await fileModel.find({subjectcode:y,year:z})
-    console.log(check1)
-    if(check1.length==0){ 
-        var temp = new fileModel({
-            subjectcode:y,
-            year:z,
-            filepath:[x]
-        })
-        temp.save((err,data)=>{
-            if(err){
-                console.log(err)
-            }
+    try{
+        var x = '/uploads/'+req.file.originalname;
+        var y = req.body.subjectcode;
+        var z = req.body.year;
+        var check1 = await fileModel.find({subjectcode:y,year:z})
+        console.log(check1)
+        if(check1.length==0){ 
+            var temp = new fileModel({
+                subjectcode:y,
+                year:z,
+                filepath:[x]
+            })
+            temp.save((err,data)=>{
+                if(err){
+                    console.log(err)
+                }
+                res.redirect('/Teacherportal')
+            })
+        } else {
+            const check2 = await fileModel.findById(check1[0]._id)
+            check2.filepath.push(x);
+            console.log(check2)
+            check2.save();
             res.redirect('/Teacherportal')
-        })
-    } else {
-        const check2 = await fileModel.findById(check1[0]._id)
-        check2.filepath.push(x);
-        console.log(check2)
-        check2.save();
-        res.redirect('/Teacherportal')
+        }
+    } catch{
+        res.send("File Upload error as nothing chosen to upload!")
     }
 })
 routerf.get('/download/:num/:id',(req,res)=>{
@@ -66,7 +70,8 @@ routerf.get('/download/:num/:id',(req,res)=>{
              console.log(err)
          }
          else{
-             const name = __dirname;
+             var name = __dirname;
+             name = name.slice(0,name.length-6)+"public";
              var x= name+data[0].filepath[req.params.num];
              console.log(x);
              res.download(x)

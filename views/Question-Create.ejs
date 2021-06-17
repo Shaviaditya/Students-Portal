@@ -47,7 +47,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 170px;
+        margin-top: 100px;
         margin-left: 450px;
         margin-right: 450px;
         flex-direction: column;
@@ -61,9 +61,10 @@
     li{
         margin: 0 0 10px 0;
     }
-    #description{
+    #description,#stream{
         font-size: 20px;
         padding: 10px 30px 10px 30px;
+        margin-bottom: 10px;
     }
     #option1{
         font-size: 20px;
@@ -109,6 +110,9 @@
     <div class="creative">
         <h1>Set your questions for the exam & set timings after that!</h1>
         <form action="/questions" method="POST">
+            <label for="stream" id="label">Stream</label>
+            <input type="text" id="stream" name="stream" placeholder="stream" required>
+            <br>
             <label for="description" id="label">Question</label>
             <input type="text" id="description" name="description" placeholder="Question" required>
             <br>

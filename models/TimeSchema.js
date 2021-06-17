@@ -8,6 +8,9 @@ const TimeSchema = new mongoose.Schema({
     endslot: {
         type: Date,
         unique: true,
+    },
+    examsubject: {
+        type: String
     }
 })
 

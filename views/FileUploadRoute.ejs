@@ -71,14 +71,18 @@
                 <br>
                 <input type="number" name="year" id="year" placeholder="Year of Study" required><br>
                 <br>
-                <input type="file" name="file" id="file"><br>
+                <input type="file" name="file" id="file" required><br>
                 <br>
                 <input id="btn" type="submit" value="upload file">
             </form><br>
         </div> 
         <script>
-            document.getElementById('btn').addEventListener('click',function(){
-                alert("File Uploaded Successfully");
+            const res = document.querySelector('form')
+            res.addEventListener('submit',async ()=>{
+                const inputchosen = form.file.value
+                if(inputchosen!=null ||inputchosen!=undefined){
+                    alert('File Upload Successful')
+                }
             })
         </script> 
  </body>

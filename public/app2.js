@@ -13,7 +13,7 @@ function update(){
     if(hours==0 && minutes==0 &&seconds==0)
     {
         alert('Exam is live')
-        location.replace('http://localhost:5000/stuview')
+        location.replace('/stuview')
     }
     count.innerHTML = `${hours}:${minutes}:${seconds}`;
     totaltime--

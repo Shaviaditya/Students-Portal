@@ -17,5 +17,7 @@ services:
             MONGO_INITDB_ROOT_PASSWORD: "rootpassword"
         volumes:
             - mongodb_data_container:/data/db  
+        ports:
+            - 27017:27107
 volumes:
     mongodb_data_container:

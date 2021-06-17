@@ -56,22 +56,6 @@
             border: none;
             padding: 10px;
         }
-        .i2{
-            font-size: 20px;
-            margin-bottom: 5%;
-            border-radius: 2px;
-            border: none;
-            padding: 10px;
-        }
-        .i3{
-            display: flex;
-            justify-content: space-between;
-        }
-        #lbl{
-            padding-top: 12px;
-            padding-left: 5px;
-            font-size: larger;
-        }
     </style>
 </head>
 <body>
@@ -81,32 +65,10 @@
     <div class="container">
         <form>
             <h1>Login</h1>
-            <input class="i1" type="text" name="username" placeholder="Username" size="30" required>
+            <input class="i1" type="text" name="username" placeholder="Username"  required>
             <div class="username error"></div>
-            <input class="i1" type="password" name="password" placeholder="Password" size="30" required>
+            <input class="i1" type="password" name="password" placeholder="Password"  required>
             <div class="password error"></div>
-            <select class="i2" type="text" name="stream" placeholder="Stream fo Study" required>
-                <option value="None">Choose Stream</option>
-                <option value="CSE">Computer Science & Engineering</option>
-                <option value="ECE">Electronics & Communication Engineering</option>
-                <option value="XEC">Civil Engineering</option>
-                <option value="ME">Mechanical Engineering</option>
-                <option value="PHC">Phyics</option>
-                <option value="CE">Chemical Engineering</option>
-                <option value="EE">Electrical Engineering</option>
-                <option value="MAC">Mathematics</option>
-                <option value="MME">Metallurgical & Materials Engineering</option>
-            </select>
-            <div class="i3">
-                <label id="lbl" for="year">Year Of Study</label>
-                <select class="i2" type="number" name="year" placeholder="Year of study" required>
-                    <option value="0"></option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                </select>
-            </div>
             <button class="btn" type="submit">Submit</button>
         </form>
     </div>
@@ -117,13 +79,14 @@
             //get values
             const username = form.username.value;
             const password = form.password.value;
-            const stream = form.stream.value;
-            const year = form.year.value;
+            //const stream = form.stream.value;
+            //const year = form.year.value;
             
             try {
                 const res = await fetch('/login',{
                     method: 'POST',
-                    body: JSON.stringify({username:username,password:password,stream:stream,year:year}),
+                    //,stream:stream,year:year
+                    body: JSON.stringify({username:username,password:password}),
                     headers: {'Content-Type':'application/json'}
                 });
                 const data = await res.json();
@@ -132,7 +95,7 @@
                     alert(data.errors.username+data.errors.password);
                 }
                 if(data.user){
-                    if(data.user==='60ad70b653de363a619b0e1a'){
+                    if(data.user==='60c5e5e03e535942a09f8269'){
                         location.assign('/Teacherportal')
                     }
                     else{

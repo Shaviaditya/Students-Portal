@@ -70,21 +70,30 @@
       <thead>
         <tr>
             <th>Candidate's Name</th>
-            <th>Marks(6)</th>
+            <th>Marks</th>
+        </tr>
+        <tr>
+          <h4><%=subject%> </h4>
         </tr>
       </thead>
       <tbody>
-        <% for(var i=0; i < studentlist.length; i++) { %>
-        <tr> 
-          <td>
-            <h4><%= studentlist[i].n %></h4>
-          </td>
-          <td>
-            <h4><%= studentlist[i].cnt %></h4>
-          </td>
-        </tr>
-        <% } %>
+        <% if(studentlist.length>0){ %> 
+          <% for(var i=0; i < studentlist.length; i++) { %>
+              <tr> 
+                <td>
+                  <h4><%= studentlist[i].n %></h4>
+                </td>
+                <td>
+                  <h4><%= studentlist[i].cnt %></h4>
+                </td>
+              </tr>
+          <% } %>  
       </tbody>
+      <% } else { %>
+        <tr>
+          <h4>No results to display yet</h4>
+        </tr>
+      <% } %>  
     </table>
   </div>
 </body>

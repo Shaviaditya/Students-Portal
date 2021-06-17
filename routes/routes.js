@@ -11,31 +11,45 @@ const Response = require('../models/userreq')
 const jwt = require('jsonwebtoken')
 const fileModel = require('../models/filex');
 const User = require('../models/users');
+const Result = require('../models/results')
 const { request } = require('express');
 routerx.use(express.json())
 routerx.use(express.urlencoded({extended:true}))
 //create a question
 var arrC = []
-global.requester = "";
+var temp;
 routerx.post('/questions',reqauth,async (req, res) => {
     try {
-        const { description } = req.body
-        const { option1 } = req.body
-        const { option2 } = req.body
-        const { option3 } = req.body
-        const { option4 } = req.body
-        const { answer } = req.body
-        arrC.push(answer);
-        const question = await Question.create({
-            description,
-            option1,
-            option2,
-            option3,
-            option4,
-            answer
-        })
-        console.log(question)
-        res.redirect('/questions/create')
+        const s = req.body.stream
+        const a = req.body.description
+        const b  = req.body.option1
+        const c = req.body.option2
+        const d = req.body.option3
+        const e = req.body.option4
+        const f = req.body.answer
+        const exp = await Question.find({stream:s})
+        console.log(exp)
+        if(exp.length==0){
+            const questions = await Question.create({
+                stream: s,
+                question: [
+                    a,
+                    b,
+                    c,
+                    d,
+                    e,
+                    f
+                ]
+            })
+            console.log(questions)
+            res.redirect('/questions/create')
+        } else {
+            const check2 = await Question.findById(exp[0]._id) 
+            check2.question.push([a,b,c,d,e,f]);
+            console.log(check2)
+            check2.save();
+            res.redirect('/questions/create')
+        }
     } catch (error) {
         console.log(error)
         return res.status(500).json({"error":error})
@@ -56,32 +70,33 @@ routerx.post('/stuview',reqauthst,async (req, res) => {
     if(time1>=time2 && time1<=time3)
     {
         try {
-            const { name } = req.body
-            const { answer } = req.body
-            console.log(answer)
+            const name = req.body.name
+            const answer  = req.body.answer
+            const examcode = timer.examsubject 
             for(let i=0;i<answer.length;i++){
                 answer[i] = ({"text":answer[i]})
             }
             const question = await Student.create({
                 name,
+                examcode,
                 answer
             })
             console.log(question)
-            return res.status(200).redirect('/response');
+            return res.status(200).redirect('/Studentportal');
         } catch (error) {
             return res.status(500).json({"error":error})
         }
     }
     else if(time1>time3){
         await Timer.deleteOne({id});
-        res.render('end');
+        res.render('Timeup_endpt');
     }
     else{
-        res.render('end')
+        res.render('Timeup_endpt')
     }
 })
 routerx.get('/questions/create',reqauth,checkuser,(req,res)=>{
-    res.render('create');
+    res.render('Question-Create');
 })
 //get all questions
 routerx.get('/questions',reqauth,async (req,res)=>{
@@ -151,15 +166,26 @@ routerx.delete('/questions/:id',reqauth,async (req,res)=>{
 })
 //student question viewer
 routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
+    var d;
+    const token = req.cookies.LoggedStudent;
+    jwt.verify(token,'secretlogin',(err,decodedToken)=>{
+        d = decodedToken;
+    })
+    const idd = d.id;
+    const key = await User.findById(idd);
+    console.log(key)
     const id = req.params._id;
     const timer = await Timer.findOne({id})
+    const requesting = await Response.findOne()
     if(timer==null){
+        await Response.findByIdAndDelete(requesting._id);
         res.send('No exam scheduled now');
     }
     else{
         console.log(timer)
         console.log(timer.startslot)
         console.log(timer.endslot)
+        var scode = timer.examsubject
         var isodate = new Date().toISOString()
         var date1 = new Date();
         var newdate1 = new Date(date1.getTime()-(date1.getTimezoneOffset()*60000)).toISOString();
@@ -172,27 +198,46 @@ routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
         console.log(start)
         console.log(end)
         var newdate2 = new Date(newdate1)
+        /*
         console.log(newdate2)
         console.log(time1)
         console.log(time2)
         console.log(time3)
+        console.log(requesting.response+"0"+key.year)
+        console.log(scode)
+        */
         if(time1>=time2 && time1<=time3)
         {
             ttime = (end-newdate2)/1000;
-            Question.find().sort({createdAt:-1})
-            .then((result)=>{
-                res.render('stuview',{'value':ttime,blogs:result})
-            })
-            .catch((err)=>{
-                console.log(err);
-            })
+            console.log(requesting.response+"0"+key.year)
+            if(scode==(requesting.response+"0"+key.year)){
+                Question.find({stream:(requesting.response+"0"+key.year)}).sort({createdAt:-1})
+                .then(async (result)=>{
+                    //temp = (requesting.response+"0"+key.year)
+                    await Response.findByIdAndDelete(requesting._id);
+                    res.render('Quizviewpage',{'value':ttime,blogs:result[0].question})
+                })
+                .catch((err)=>{
+                    console.log(err);
+                })
+            }else{
+                await Response.findByIdAndDelete(requesting._id);
+                res.send('This Subject doesnot have an active exam now');
+            }
         }
         else if(newdate2>end){
+            await Response.findByIdAndDelete(requesting._id);
             await Timer.deleteOne({id});
-            res.render('end');
+            res.render('Timeup_endpt');
         }
         else if(time1<time2){
-            res.render('end2',{'value':(start-newdate2)/1000})
+            if(scode===(requesting.response+"0"+key.year)){
+                await Response.findByIdAndDelete(requesting._id);
+                res.render('Pre-Quiz_Setup',{'value':(start-newdate2)/1000})
+            }else{
+                await Response.findByIdAndDelete(requesting._id);
+                res.send('This Subject doesnot have an active exam now');
+            }
         }
     }
 });
@@ -205,7 +250,7 @@ const handlerror = (err)=>{
     return error;
 }
 routerx.get('/settime',reqauth,checkuser,(req,res)=>{
-    res.render('settimer')
+    res.render('Settimer')
 })
 routerx.post('/settime',reqauth,async (req,res)=>{
     try{
@@ -215,10 +260,13 @@ routerx.post('/settime',reqauth,async (req,res)=>{
         const endday = req.body.enddate
         const startslot = (startday.toString())+"T"+starttime+"Z"
         const endslot = (endday.toString())+"T"+endtime+"Z"
+        const examsubject = req.body.examsubject
         const schedule = await Timer.create({
             startslot,
-            endslot
+            endslot,
+            examsubject
         })
+        console.log(schedule)
         res.redirect('/Teacherportal')
     }
     catch(err){
@@ -226,14 +274,40 @@ routerx.post('/settime',reqauth,async (req,res)=>{
         return res.send(errors.startslot);
     }
 })
+
 routerx.get('/response',async(req,res)=>{
-    const arr = [],arr2 = [];
-    (await Question.find()).forEach((mydoc)=>{
-        arr.push(mydoc.answer)
+    var d;
+    const token = req.cookies.LoggedStudent;
+    jwt.verify(token,'secretlogin',(err,decodedToken)=>{
+        d = decodedToken;
     })
+    const idd1 = d.id;
+    const key = await User.findById(idd1);
+    console.log(key)
+    const id = req.params._id;
+    const requesting1 = await Response.findOne()
+    var arr = [],arr2 = [],tmp,arr3=[];
     var cnt = 0;
+    /*
     (await Student.find()).forEach((mydoc2)=>{
+        var n1 = mydoc2.examcode;
+        tmp = n1
+    });
+    */
+    tmp = (requesting1.response+"0"+key.year)
+    await Question.find({stream:(requesting1.response+"0"+key.year)}).then((iv1)=>{
+        try{
+            arr = [];
+            for(let i=0;i<((iv1[0].question)).length;i++){
+                arr.push(((iv1[0].question)[i])[5])
+            };
+        } catch{
+            arr.push(0);
+        }
+    });
+    (await Student.find({examcode:(requesting1.response+"0"+key.year)})).forEach((mydoc2)=>{
         var n = mydoc2.name;
+        var co = mydoc2.examcode;
         for(let i=0;i<(mydoc2.answer).length;i++){
             if(arr[i]==(((mydoc2.answer)[i].text))){
                 cnt = cnt + 1; 
@@ -241,17 +315,18 @@ routerx.get('/response',async(req,res)=>{
         }
         arr2.push({n,cnt})
         cnt = 0;
-    })
+    });
     for(let i=0;i<arr2.length;i++){
         JSON.stringify(arr2[i])
     }
-    res.render('resultlist',{'studentlist' : arr2} );
+    await Response.findByIdAndDelete(requesting1._id);
+    res.render('ResultsPage',{'studentlist' : arr2,'subject': tmp});
 })
 routerx.get('/end2',checkuser2,(req,res)=>{
-    res.render('end2');
+    res.render('Pre-Quiz_Setup');
 })
 routerx.get('/subject/create',reqauth,checkuser,(req,res)=>{
-    res.render('subjectcreate')
+    res.render('Createnew_subject')
 })
 routerx.post('/subject/create',reqauth,checkuser,(req,res)=>{
     var x = req.body.subject
@@ -277,6 +352,30 @@ routerx.get('/subjects',reqauthst,checkuser2,async (req,res)=>{
             res.render('subjects',{data:{}})
         }
     })
+})
+routerx.get('/examsubjects',reqauthst,checkuser2,async (req,res)=>{
+    await Subject.find((err,data)=>{
+        if(err){
+            console.log(err)
+        } else if(data.length>0){
+            res.render('examsubjects',{data:data})
+        } else {
+            res.render('examsubjects',{data:{}})
+        }
+    })
+})
+routerx.post('/examsubject/data',reqauthst,checkuser2,async (req,res)=>{
+    var x = req.body.response
+    console.log(x);
+    var temp = new Response({
+        response:x
+    })
+    temp.save((err,data)=>{
+        if(err){
+            console.log(err)
+        }
+    })
+    res.redirect('/stuview')
 })
 routerx.post('/subject/data',reqauthst,checkuser2,async (req,res)=>{
     var x = req.body.response
@@ -310,11 +409,11 @@ routerx.get('/subject/data',checkuser2,reqauthst,async (req,res)=>{
             }
             else if(data.length>0){
                 await Response.findByIdAndDelete(id2);
-                res.render('route2',{data:data})
+                res.render('FileDownloadRoute',{data:data})
             }
             else{
                 await Response.findByIdAndDelete(id2);
-                res.render('route2',{data:{}})
+                res.render('FileDownloadRoute',{data:{}})
             }
         })
     } else {
@@ -359,15 +458,39 @@ routerx.get('/subject1/data',checkuser,reqauth,async(req,res)=>{
             }
             else if(data.length>0){
                 await Response.findByIdAndDelete(id2);
-                res.render('route3',{data:data})
+                res.render('Uploadednotesviewer',{data:data})
             }
             else{
                 await Response.findByIdAndDelete(id2);
-                res.render('route3',{data:{}})
+                res.render('Uploadednotesviewer',{data:{}})
             }
         })
     } else {
         res.redirect('/Teacherportal')
     }
+})
+routerx.get('/resultcheck',reqauthst,checkuser2,async (req,res)=>{
+    await Subject.find((err,data)=>{
+        if(err){
+            console.log(err)
+        } else if(data.length>0){
+            res.render('resultcheck',{data:data})
+        } else {
+            res.render('resultcheck',{data:{}})
+        }
+    })
+})
+routerx.post('/resultcheck/data',reqauthst,checkuser2,async (req,res)=>{
+    var x = req.body.response
+    console.log(x);
+    var temp = new Response({
+        response:x
+    })
+    temp.save((err,data)=>{
+        if(err){
+            console.log(err)
+        }
+    })
+    res.redirect('/response')
 })
 module.exports = routerx;
