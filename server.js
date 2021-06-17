@@ -19,8 +19,8 @@ app.use(cookieParser())
 app.set('view engine','ejs')
 //Connecting to the database
 const port = process.env.PORT||5000
-const uri = process.env.DATABASE_URI
-console.log(uri)
+const uri = 'mongodb://localhost:27017/myFirstDatabase'
+//console.log(uri)
 mongoose.connect(uri,{useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
 .then(()=>{
     app.listen(port,()=>{
