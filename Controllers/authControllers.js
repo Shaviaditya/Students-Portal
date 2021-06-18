@@ -61,7 +61,7 @@ module.exports.login_post = async (req,res)=>{
         const token = createtokens(user._id)
         if(username==='teacher'){
             res.cookie('LoggedTeacher',token,{httpOnly: true})
-            res.status(201).json({user: user._id})
+            res.status(201).json({user: user})
         }
         else{
             res.cookie('LoggedStudent',token,{httpOnly: true})

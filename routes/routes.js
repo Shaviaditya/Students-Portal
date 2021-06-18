@@ -11,14 +11,12 @@ const Response = require('../models/userreq')
 const jwt = require('jsonwebtoken')
 const fileModel = require('../models/filex');
 const User = require('../models/users');
-const Result = require('../models/results')
+const Year = require('../models/YearSchema');
 const { request } = require('express');
 routerx.use(express.json())
 routerx.use(express.urlencoded({extended:true}))
 //create a question
-var arrC = []
-var temp;
-routerx.post('/questions',reqauth,async (req, res) => {
+routerx.post('/questions',reqauth,checkuser,async (req, res) => {
     try {
         const s = req.body.stream
         const a = req.body.description
@@ -56,7 +54,7 @@ routerx.post('/questions',reqauth,async (req, res) => {
     }
 })
 //Post Student Responses
-routerx.post('/stuview',reqauthst,async (req, res) => {
+routerx.post('/stuview',reqauthst,checkuser2,async (req, res) => {
     const id = req.params._id;
     const timer = await Timer.findOne({id})
     console.log(timer)
@@ -198,14 +196,6 @@ routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
         console.log(start)
         console.log(end)
         var newdate2 = new Date(newdate1)
-        /*
-        console.log(newdate2)
-        console.log(time1)
-        console.log(time2)
-        console.log(time3)
-        console.log(requesting.response+"0"+key.year)
-        console.log(scode)
-        */
         if(time1>=time2 && time1<=time3)
         {
             ttime = (end-newdate2)/1000;
@@ -252,7 +242,7 @@ const handlerror = (err)=>{
 routerx.get('/settime',reqauth,checkuser,(req,res)=>{
     res.render('Settimer')
 })
-routerx.post('/settime',reqauth,async (req,res)=>{
+routerx.post('/settime',reqauth,checkuser,async (req,res)=>{
     try{
         const starttime = req.body.starttime
         const endtime = req.body.endtime
@@ -275,7 +265,7 @@ routerx.post('/settime',reqauth,async (req,res)=>{
     }
 })
 
-routerx.get('/response',async(req,res)=>{
+routerx.get('/response',reqauthst,checkuser2,async(req,res)=>{
     var d;
     const token = req.cookies.LoggedStudent;
     jwt.verify(token,'secretlogin',(err,decodedToken)=>{
@@ -288,12 +278,6 @@ routerx.get('/response',async(req,res)=>{
     const requesting1 = await Response.findOne()
     var arr = [],arr2 = [],tmp,arr3=[];
     var cnt = 0;
-    /*
-    (await Student.find()).forEach((mydoc2)=>{
-        var n1 = mydoc2.examcode;
-        tmp = n1
-    });
-    */
     tmp = (requesting1.response+"0"+key.year)
     await Question.find({stream:(requesting1.response+"0"+key.year)}).then((iv1)=>{
         try{
@@ -365,6 +349,7 @@ routerx.get('/examsubjects',reqauthst,checkuser2,async (req,res)=>{
     })
 })
 routerx.post('/examsubject/data',reqauthst,checkuser2,async (req,res)=>{
+    await Response.remove({});
     var x = req.body.response
     console.log(x);
     var temp = new Response({
@@ -378,6 +363,7 @@ routerx.post('/examsubject/data',reqauthst,checkuser2,async (req,res)=>{
     res.redirect('/stuview')
 })
 routerx.post('/subject/data',reqauthst,checkuser2,async (req,res)=>{
+    await Response.remove({});
     var x = req.body.response
     console.log(x);
     var temp = new Response({
@@ -436,6 +422,7 @@ routerx.get('/subjects1',reqauth,checkuser,async (req,res)=>{
     })
 })
 routerx.post('/subject1/data',reqauth,checkuser,async (req,res)=>{
+    await Response.remove({});
     var x = req.body.response
     var temp = new Response({
         response:x
@@ -481,6 +468,7 @@ routerx.get('/resultcheck',reqauthst,checkuser2,async (req,res)=>{
     })
 })
 routerx.post('/resultcheck/data',reqauthst,checkuser2,async (req,res)=>{
+    await Response.remove({});
     var x = req.body.response
     console.log(x);
     var temp = new Response({
@@ -492,5 +480,84 @@ routerx.post('/resultcheck/data',reqauthst,checkuser2,async (req,res)=>{
         }
     })
     res.redirect('/response')
+})
+routerx.get('/midyear',(req,res)=>{
+    res.render('midyear')
+})
+routerx.post('/midyear',reqauth,checkuser,async (req,res)=>{
+    await Year.remove({});
+    var y = req.body.year
+    var temp = new Year({
+        year:y
+    })
+    temp.save((err,data)=>{
+        if(err){
+            console.log(err)
+        }
+    })
+    res.redirect('/subjects2')
+})
+routerx.get('/subjects2',reqauth,checkuser,async (req,res)=>{
+    await Subject.find((err,data)=>{
+        if(err){
+            console.log(err)
+        } else if(data.length>0){
+            res.render('subjects2',{data:data})
+        } else {
+            res.render('subjects2',{data:{}})
+        }
+    })
+})
+routerx.post('/subject2/data',reqauth,checkuser,async (req,res)=>{
+    await Response.remove({});
+    var x = req.body.response
+    var temp = new Response({
+        response:x
+    })
+    temp.save((err,data)=>{
+        if(err){
+            console.log(err)
+        }
+    })
+    res.redirect('/resultcheck2')
+})
+routerx.get('/resultcheck2',reqauth,checkuser,async(req,res)=>{
+    var requesting2 = await Response.findOne();
+    var getyear = await Year.findOne();
+    var arr = [],arr2 = [],tmp,arr3=[];
+    var cnt = 0;
+    /*
+    (await Student.find()).forEach((mydoc2)=>{
+        var n1 = mydoc2.examcode;
+        tmp = n1
+    });
+    */
+    tmp = (requesting2.response+"0"+getyear.year)
+    await Question.find({stream:(requesting2.response+"0"+getyear.year)}).then((iv1)=>{
+        try{
+            arr = [];
+            for(let i=0;i<((iv1[0].question)).length;i++){
+                arr.push(((iv1[0].question)[i])[5])
+            };
+        } catch{
+            arr.push(0);
+        }
+    });
+    (await Student.find({examcode:(requesting2.response+"0"+getyear.year)})).forEach((mydoc2)=>{
+        var n = mydoc2.name;
+        var co = mydoc2.examcode;
+        for(let i=0;i<(mydoc2.answer).length;i++){
+            if(arr[i]==(((mydoc2.answer)[i].text))){
+                cnt = cnt + 1; 
+            }
+        }
+        arr2.push({n,cnt})
+        cnt = 0;
+    });
+    for(let i=0;i<arr2.length;i++){
+        JSON.stringify(arr2[i])
+    }
+    await Response.remove({});
+    res.render('ResultsPage',{'studentlist' : arr2,'subject': tmp});
 })
 module.exports = routerx;

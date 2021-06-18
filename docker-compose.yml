@@ -6,16 +6,9 @@ services:
         build: .
         command: npm start
         ports: 
-            - 5000:5000
+            - '5000:5000'
         links: 
             - 'mongo'
     mongo:
         container_name: mongo
-        image: mongo:latest
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: "root"
-            MONGO_INITDB_ROOT_PASSWORD: "rootpassword"
-        volumes:
-            - mongodb_data_container:/data/db  
-volumes:
-    mongodb_data_container:
+        image: mongo

@@ -91,11 +91,12 @@
                 });
                 const data = await res.json();
                 console.log(data)
+                console.log(data.user)
                 if(data.errors){
                     alert(data.errors.username+data.errors.password);
                 }
                 if(data.user){
-                    if(data.user==='60c5e5e03e535942a09f8269'){
+                    if(data.user.username==='teacher'){
                         location.assign('/Teacherportal')
                     }
                     else{
