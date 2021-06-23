@@ -21,7 +21,7 @@ app.set('view engine','ejs')
 const port = process.env.PORT||5000
 //const uri = ''
 //console.log(uri)
-mongoose.connect(process.env.DATABASE_URI,{useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+mongoose.connect(process.env.DATABASE_URI_ATLAS,{useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
 .then(()=>{
     app.listen(port,()=>{
         console.log(`Database Up and running at http://localhost:${port}/`)
