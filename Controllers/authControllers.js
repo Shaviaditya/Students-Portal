@@ -39,9 +39,9 @@ module.exports.signup_get = (req,res)=>{
     res.render('Signup');
 }
 module.exports.signup_post = async (req,res)=>{
-    const {username, password, stream , year} = req.body;
+    const {username, password,roll ,stream , year} = req.body;
     try{
-        const u1 = await users.create({username,password, stream , year});
+        const u1 = await users.create({username,password,roll ,stream , year});
         const token = createtokens(u1._id)
         res.cookie('NewUser',token,{httpOnly: true, maxAge:maxAge*1000})
         res.status(201).json({u1: u1._id})

@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
         unique: true,
         minlength : [6,'Password Length too short!']
     },
+    roll:{
+        type: Number,
+    },
     stream:{
         type: String,
     },

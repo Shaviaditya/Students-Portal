@@ -85,6 +85,8 @@
             <div class="username error"></div>
             <input class="i1" type="password" name="password" placeholder="Password" size="30" required>
             <div class="password error"></div>
+            <input class="i1" type="number" name="roll" placeholder="Roll-Number" size="30" required>
+            <br>
             <select class="i2" type="text" name="stream" placeholder="Stream fo Study" required>
                 <option value="None">Choose Stream </option>
                 <option value="CSE">Computer Science & Engineering</option>
@@ -117,13 +119,14 @@
             //get values
             const username = form.username.value;
             const password = form.password.value;
+            const roll = form.roll.value;
             const stream = form.stream.value;
             const year = form.year.value;
             
             try {
                 const res = await fetch('/signup',{
                     method: 'POST',
-                    body: JSON.stringify({username:username,password:password,stream:stream,year:year}),
+                    body: JSON.stringify({username:username,password:password,roll:roll,stream:stream,year:year}),
                     headers: {'Content-Type':'application/json'}
                 });
                 const data = await res.json();

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const QuestionSchema = new mongoose.Schema({
     stream: String,
+    set: Number,
     question:[
         [
             {

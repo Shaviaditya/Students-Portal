@@ -11,7 +11,7 @@ const TimeSchema = new mongoose.Schema({
     },
     examsubject: {
         type: String
-    }
+    },
 })
 
 module.exports = mongoose.model('Timer',TimeSchema)

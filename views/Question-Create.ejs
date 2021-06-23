@@ -61,7 +61,7 @@
     li{
         margin: 0 0 10px 0;
     }
-    #description,#stream{
+    #description,#stream,#set{
         font-size: 20px;
         padding: 10px 30px 10px 30px;
         margin-bottom: 10px;
@@ -112,6 +112,8 @@
         <form action="/questions" method="POST">
             <label for="stream" id="label">Stream</label>
             <input type="text" id="stream" name="stream" placeholder="stream" required>
+            <label for="set" id="label">Set</label>
+            <input type="number" id="set" name="set" placeholder="set" required>
             <br>
             <label for="description" id="label">Question</label>
             <input type="text" id="description" name="description" placeholder="Question" required>

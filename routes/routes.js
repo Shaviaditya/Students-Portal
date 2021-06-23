@@ -19,17 +19,19 @@ routerx.use(express.urlencoded({extended:true}))
 routerx.post('/questions',reqauth,checkuser,async (req, res) => {
     try {
         const s = req.body.stream
+        const x = req.body.set
         const a = req.body.description
         const b  = req.body.option1
         const c = req.body.option2
         const d = req.body.option3
         const e = req.body.option4
         const f = req.body.answer
-        const exp = await Question.find({stream:s})
+        const exp = await Question.find({stream:s,set:x})
         console.log(exp)
         if(exp.length==0){
             const questions = await Question.create({
                 stream: s,
+                set: x,
                 question: [
                     a,
                     b,
@@ -55,11 +57,25 @@ routerx.post('/questions',reqauth,checkuser,async (req, res) => {
 })
 //Post Student Responses
 routerx.post('/stuview',reqauthst,checkuser2,async (req, res) => {
+    var d;
+    const token = req.cookies.LoggedStudent;
+    jwt.verify(token,'secretlogin',(err,decodedToken)=>{
+        d = decodedToken;
+    })
+    const idd = d.id;
+    const key = await User.findById(idd);
+    var setkey=0;
+    if(key.roll>=1 && key.roll<=30){
+        setkey = 1;
+    }else if(key.roll>=31 && key.roll<=60){
+        setkey = 2;
+    }else if(key.roll>=61 && key.roll<=90){
+        setkey = 3;
+    }
     const id = req.params._id;
     const timer = await Timer.findOne({id})
     console.log(timer)
     var isodate = new Date().toISOString()
-
     var time1 = new Date(isodate).toLocaleTimeString('en',{timestyle:'short',hour12:false,timeZone:'Asia/Kolkata'});
     var start = timer.startslot
     var time2 = new Date(start).toLocaleTimeString('en',{timestyle:'short',hour12:false,timeZone:'UTC'});
@@ -68,7 +84,8 @@ routerx.post('/stuview',reqauthst,checkuser2,async (req, res) => {
     if(time1>=time2 && time1<=time3)
     {
         try {
-            const name = req.body.name
+            const name = key.username
+            const set = setkey
             const answer  = req.body.answer
             const examcode = timer.examsubject 
             for(let i=0;i<answer.length;i++){
@@ -76,6 +93,7 @@ routerx.post('/stuview',reqauthst,checkuser2,async (req, res) => {
             }
             const question = await Student.create({
                 name,
+                set,
                 examcode,
                 answer
             })
@@ -172,6 +190,14 @@ routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
     const idd = d.id;
     const key = await User.findById(idd);
     console.log(key)
+    var setkey=0;
+    if(key.roll>=1 && key.roll<=30){
+        setkey = 1;
+    }else if(key.roll>=31 && key.roll<=60){
+        setkey = 2;
+    }else if(key.roll>=61 && key.roll<=90){
+        setkey = 3;
+    }
     const id = req.params._id;
     const timer = await Timer.findOne({id})
     const requesting = await Response.findOne()
@@ -183,7 +209,7 @@ routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
         console.log(timer)
         console.log(timer.startslot)
         console.log(timer.endslot)
-        var scode = timer.examsubject
+        var scode = timer.examsubject;
         var isodate = new Date().toISOString()
         var date1 = new Date();
         var newdate1 = new Date(date1.getTime()-(date1.getTimezoneOffset()*60000)).toISOString();
@@ -201,7 +227,7 @@ routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
             ttime = (end-newdate2)/1000;
             console.log(requesting.response+"0"+key.year)
             if(scode==(requesting.response+"0"+key.year)){
-                Question.find({stream:(requesting.response+"0"+key.year)}).sort({createdAt:-1})
+                Question.find({stream:(requesting.response+"0"+key.year),set:setkey}).sort({createdAt:-1})
                 .then(async (result)=>{
                     //temp = (requesting.response+"0"+key.year)
                     await Response.findByIdAndDelete(requesting._id);
@@ -222,7 +248,7 @@ routerx.get('/stuview',reqauthst,checkuser2,async (req,res)=>{
         }
         else if(time1<time2){
             if(scode===(requesting.response+"0"+key.year)){
-                await Response.findByIdAndDelete(requesting._id);
+                //await Response.findByIdAndDelete(requesting._id);
                 res.render('Pre-Quiz_Setup',{'value':(start-newdate2)/1000})
             }else{
                 await Response.findByIdAndDelete(requesting._id);
@@ -243,6 +269,7 @@ routerx.get('/settime',reqauth,checkuser,(req,res)=>{
     res.render('Settimer')
 })
 routerx.post('/settime',reqauth,checkuser,async (req,res)=>{
+    await Timer.remove({})
     try{
         const starttime = req.body.starttime
         const endtime = req.body.endtime
@@ -254,7 +281,7 @@ routerx.post('/settime',reqauth,checkuser,async (req,res)=>{
         const schedule = await Timer.create({
             startslot,
             endslot,
-            examsubject
+            examsubject,
         })
         console.log(schedule)
         res.redirect('/Teacherportal')
@@ -274,12 +301,19 @@ routerx.get('/response',reqauthst,checkuser2,async(req,res)=>{
     const idd1 = d.id;
     const key = await User.findById(idd1);
     console.log(key)
-    const id = req.params._id;
+    var setkey=0;
+    if(key.roll>=1 && key.roll<=30){
+        setkey = 1;
+    }else if(key.roll>=31 && key.roll<=60){
+        setkey = 2;
+    }else if(key.roll>=61 && key.roll<=90){
+        setkey = 3;
+    }
     const requesting1 = await Response.findOne()
-    var arr = [],arr2 = [],tmp,arr3=[];
+    var arr = [],arr2 = [],tmp;
     var cnt = 0;
     tmp = (requesting1.response+"0"+key.year)
-    await Question.find({stream:(requesting1.response+"0"+key.year)}).then((iv1)=>{
+    await Question.find({stream:(requesting1.response+"0"+key.year),set:setkey}).then((iv1)=>{
         try{
             arr = [];
             for(let i=0;i<((iv1[0].question)).length;i++){
@@ -289,7 +323,7 @@ routerx.get('/response',reqauthst,checkuser2,async(req,res)=>{
             arr.push(0);
         }
     });
-    (await Student.find({examcode:(requesting1.response+"0"+key.year)})).forEach((mydoc2)=>{
+    (await Student.find({examcode:(requesting1.response+"0"+key.year),set:setkey})).forEach((mydoc2)=>{
         var n = mydoc2.name;
         var co = mydoc2.examcode;
         for(let i=0;i<(mydoc2.answer).length;i++){
@@ -481,14 +515,16 @@ routerx.post('/resultcheck/data',reqauthst,checkuser2,async (req,res)=>{
     })
     res.redirect('/response')
 })
-routerx.get('/midyear',(req,res)=>{
+routerx.get('/midyear',reqauth,checkuser,(req,res)=>{
     res.render('midyear')
 })
 routerx.post('/midyear',reqauth,checkuser,async (req,res)=>{
     await Year.remove({});
     var y = req.body.year
+    var z = req.body.set
     var temp = new Year({
-        year:y
+        year:y,
+        set:z
     })
     temp.save((err,data)=>{
         if(err){
@@ -533,7 +569,7 @@ routerx.get('/resultcheck2',reqauth,checkuser,async(req,res)=>{
     });
     */
     tmp = (requesting2.response+"0"+getyear.year)
-    await Question.find({stream:(requesting2.response+"0"+getyear.year)}).then((iv1)=>{
+    await Question.find({stream:(requesting2.response+"0"+getyear.year),set:getyear.set}).then((iv1)=>{
         try{
             arr = [];
             for(let i=0;i<((iv1[0].question)).length;i++){
@@ -543,7 +579,7 @@ routerx.get('/resultcheck2',reqauth,checkuser,async(req,res)=>{
             arr.push(0);
         }
     });
-    (await Student.find({examcode:(requesting2.response+"0"+getyear.year)})).forEach((mydoc2)=>{
+    (await Student.find({examcode:(requesting2.response+"0"+getyear.year),set:getyear.set})).forEach((mydoc2)=>{
         var n = mydoc2.name;
         var co = mydoc2.examcode;
         for(let i=0;i<(mydoc2.answer).length;i++){
